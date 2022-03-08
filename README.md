@@ -1,4 +1,8 @@
-# Welcome to Remix!
+# Remix Jokes
+
+This is the official Remix tutorial I used to get familiar with the framework. Shout-out to the Remix team. Very helpful tutorial.
+
+## Welcome to Remix!
 
 - [Remix Docs](https://remix.run/docs)
 
