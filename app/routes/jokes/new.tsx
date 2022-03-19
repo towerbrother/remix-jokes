@@ -1,8 +1,16 @@
-import type { ActionFunction } from "remix";
-import { useActionData, redirect, json } from "remix";
+import type { ActionFunction, LoaderFunction } from "remix";
+import { useActionData, redirect, json, useCatch, Link } from "remix";
 
 import { db } from "~/utils/db.server";
-import { requireUserId } from "~/utils/session.server";
+import { requireUserId, getUserId } from "~/utils/session.server";
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const userId = await getUserId(request);
+  if (!userId) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+  return json({});
+};
 
 function validateJokeContent(content: string) {
   if (content.length < 10) {
@@ -53,11 +61,12 @@ export const action: ActionFunction = async ({ request }) => {
   const joke = await db.joke.create({
     data: { ...fields, jokesterId: userId },
   });
-  return redirect(`/jokes/${joke.id}`);
+  return redirect(`/jokes/${joke.id}/`);
 };
 
 export default function NewJokeRoute() {
   const actionData = useActionData<ActionData>();
+
   return (
     <div>
       <p>Add your own hilarious joke</p>
@@ -108,7 +117,7 @@ export default function NewJokeRoute() {
         <div>
           {actionData?.formError ? (
             <p className="form-validation-error" role="alert">
-              {actionData?.formError}
+              {actionData.formError}
             </p>
           ) : null}
           <button type="submit" className="button">
@@ -118,6 +127,19 @@ export default function NewJokeRoute() {
       </form>
     </div>
   );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  if (caught.status === 401) {
+    return (
+      <div className="error-container">
+        <p>You must be logged in to create a joke.</p>
+        <Link to="/login/">Login</Link>
+      </div>
+    );
+  }
 }
 
 export function ErrorBoundary() {
