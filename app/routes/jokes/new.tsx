@@ -58,7 +58,6 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function NewJokeRoute() {
   const actionData = useActionData<ActionData>();
-
   return (
     <div>
       <p>Add your own hilarious joke</p>
@@ -78,7 +77,7 @@ export default function NewJokeRoute() {
           </label>
           {actionData?.fieldErrors?.name ? (
             <p className="form-validation-error" role="alert" id="name-error">
-              {actionData.fieldErrors.name}
+              {actionData?.fieldErrors?.name}
             </p>
           ) : null}
         </div>
@@ -102,14 +101,14 @@ export default function NewJokeRoute() {
               role="alert"
               id="content-error"
             >
-              {actionData.fieldErrors.content}
+              {actionData?.fieldErrors?.content}
             </p>
           ) : null}
         </div>
         <div>
           {actionData?.formError ? (
             <p className="form-validation-error" role="alert">
-              {actionData.formError}
+              {actionData?.formError}
             </p>
           ) : null}
           <button type="submit" className="button">
