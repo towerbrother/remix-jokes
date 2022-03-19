@@ -72,11 +72,6 @@ export const action: ActionFunction = async ({ request }) => {
         });
       }
       return createUserSession(user.id, redirectTo);
-
-      return badRequest({
-        fields,
-        formError: "Not implemented",
-      });
     }
     case "register": {
       const userExists = await db.user.findFirst({
